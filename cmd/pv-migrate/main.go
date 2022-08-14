@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"math/rand"
 	"time"
 
@@ -22,14 +23,16 @@ var (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	logger, err := applog.New()
+	ctx := context.Background()
+
+	logger, err := applog.New(ctx)
 	if err != nil {
 		log.Fatalf("Error: %s", err.Error())
 	}
 
 	rootCmd := app.New(logger, version, commit, date)
 
-	err = rootCmd.Execute()
+	err = rootCmd.ExecuteContext(ctx)
 	if err != nil {
 		logger.Fatalf(":cross_mark: Error: %s", err.Error())
 	}
